@@ -2,6 +2,7 @@ package com.afayp.baseadapter.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,23 +11,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by afayp on 2016/8/26.
+ * 一种布局
  */
 public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
 
     protected Context mContext;
     protected List<T> mData;//数据源
+    protected LayoutInflater mLayoutInflater;
     private int layoutResId;//item布局resId
     private int mDuration = 300;//默认动画时间
     private boolean isOpenAnimation = true;//是否开启动画
     private LinearLayout mHeaderLayout;//所有的headerview放在这里
     private LinearLayout mFooterLayout;//所有的footerview放在这里
     private LinearLayout mEmptyView;//空view
+    private int mLastPosition = -1;
+    private boolean mIsLoading = false;//是否正在加载 mLoadingMoreEnable
 
     public static final int HEADER_VIEW = 0x00000111;
     public static final int LOADING_VIEW = 0x00000222;
     public static final int FOOTER_VIEW = 0x00000333;
     public static final int EMPTY_VIEW = 0x00000555;
+
+    private LoadMoreListener mLoadMoreListener;
+    private View mLoadingView;//正在加载的view
+
+    private void setLoadMorelistener(LoadMoreListener loadMorelistener){
+        this.mLoadMoreListener  = loadMorelistener;
+    }
+
+    public interface LoadMoreListener{
+        void onLoadMore();
+    }
 
     public BaseQuickAdapter(List<T> data, int layoutResId) {
         this.mData = data == null ? new ArrayList<T>() : data;
@@ -39,15 +54,105 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
         this(data,0);
     }
 
+    /** 傻傻分不清。。
+     *  notifyItemInserted();
+        notifyItemRangeInserted();
+
+        notifyItemRemoved();
+        notifyItemRangeRemoved();
+
+        notifyItemRangeChanged();
+        notifyDataSetChanged();
+        notifyAll();
+
+        或者直接 notifyItemRangeChanged(0, mData.size());//全部重新bind一遍
+     * @param position
+     */
+    public void remove(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position +getHeaderLayoutCount());
+        notifyItemRangeChanged(position + getHeaderLayoutCount(),mData.size() +getHeaderLayoutCount() - position);//？
+    }
+    public void add(int position, T item) {
+        mData.add(position, item);
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position +1 +getHeaderLayoutCount(),mData.size() +getHeaderLayoutCount() - position);
+    }
+
+    //加到指定位置
+    public void addData(int position , List<T> data){
+        this.mData.addAll(data);
+        notifyItemRangeInserted(position + getHeaderLayoutCount(),mData.size() +getHeaderLayoutCount() - position);
+        notifyItemRangeChanged(position +getHeaderLayoutCount(),mData.size() +getHeaderLayoutCount() - position);
+    }
+
+    //加到最后面
+    public void addData(List<T> newData){
+        this.mData.addAll(newData);
+        notifyItemRangeChanged(mData.size() - newData.size() + getHeaderLayoutCount(),newData.size());
+    }
+
+    //重新设置数据
+    public void setNewData(List<T> data){
+        this.mData = data;
+        mLastPosition = -1;
+        notifyDataSetChanged();
+    }
+
+    public boolean isLoading(){
+        return mIsLoading;
+    }
+
+    public void setLoadingView(View loadingView) {
+        this.mLoadingView = loadingView;
+    }
+
+    public List<T> getData() {
+        return mData;
+    }
+
+    public T getItem(int position) {
+        return mData.get(position);
+    }
+
+    public int getmEmptyViewCount() {
+        return mEmptyView == null ? 0 : 1;
+    }
+
+    public int getHeaderLayoutCount() {
+        return mHeaderLayout == null ? 0 : 1;
+    }
+
+    public int getFooterLayoutCount() {
+        return mFooterLayout == null ? 0 : 1;
+    }
+
+    public int getEmptyViewCount() {
+        return mEmptyView == null ? 0 : 1;
+    }
+
+    private boolean isLoadMore() {
+//        return mNextLoadEnable && pageSize != -1 && mRequestLoadMoreListener != null && mData.size() >= pageSize;
+        return true;
+    }
+
+
+
     @Override
     public int getItemCount() {
-        int count = mData.size() + getHeaderLayoutCount() + getFooterLayoutCount();
-
-        return mData.size();
+        int i = isLoadMore() ? 1: 0;
+        int count = mData.size() +i + getHeaderLayoutCount() + getFooterLayoutCount();//加上header和footer的数量
+        // TODO: 2016/9/20
+        return count;
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
+        if (mHeaderLayout != null && position == 0){
+            return HEADER_VIEW;
+        }
         return super.getItemViewType(position);
     }
 
@@ -66,7 +171,6 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
                 holder = BaseViewHolder.createViewHolder(mContext,parent,layoutResId);
                 break;
         }
-
         return holder;
     }
 
@@ -84,25 +188,15 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
             default:
                 convert(holder, mData.get(realPos - getHeaderLayoutCount()),realPos);
                 break;
-
         }
     }
 
     protected abstract void convert(BaseViewHolder holder, T item,int position);
 
 
-    public void remove(int position) {
-        mData.remove(position);
-        notifyItemRemoved(position);
-    }
-    public void add(int position, T item) {
-        mData.add(position, item);
-        notifyItemInserted(position);
-    }
 
-    public T getItem(int position) {
-        return mData.get(position);
-    }
+
+
 
     //**********头部、尾部、空view***********//
 
@@ -206,17 +300,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
         return mEmptyView;
     }
 
-    public int getHeaderLayoutCount() {
-        return mHeaderLayout == null ? 0 : 1;
-    }
 
-    public int getFooterLayoutCount() {
-        return mFooterLayout == null ? 0 : 1;
-    }
-
-    public int getEmptyViewCount() {
-        return mEmptyView == null ? 0 : 1;
-    }
 
 
 

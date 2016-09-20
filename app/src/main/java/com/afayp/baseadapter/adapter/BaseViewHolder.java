@@ -15,13 +15,13 @@ import com.afayp.baseadapter.R;
 import com.bumptech.glide.Glide;
 
 /**
- * Created by afayp on 2016/8/26.
+ * 所有ViewHolder的基类
  */
 public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private final SparseArray<View> views;
     private final Context context;
-    private View convertView;
+    private View convertView;//整个itemview
 
     protected BaseViewHolder(Context context, View view) {
         super(view);
@@ -41,6 +41,12 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return holder;
     }
 
+    /**
+     * 根据viewId 返回item中对应的view
+     * @param viewId
+     * @param <T>
+     * @return
+     */
     public <T extends View> T getView(int viewId) {
 
         View view = views.get(viewId);
@@ -51,6 +57,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
+    /**
+     *返回整个item view
+     */
     public View getView(){
         return convertView;
     }
@@ -65,10 +74,16 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder setImageUrl(int viewId, String imageUrl) {
         ImageView view = getView(viewId);
-        Glide.with(context).load(imageUrl).placeholder(R.mipmap.ic_launcher).into(view);
+        Glide.with(context).load(imageUrl).placeholder(R.mipmap.ic_launcher).into(view);//加载图片的方式可以自己定义
         return this;
     }
 
+    /**
+     *
+     * @param viewId
+     * @param visible True for VISIBLE, false for GONE.
+     * @return
+     */
     public BaseViewHolder setVisible(int viewId, boolean visible) {
         View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
