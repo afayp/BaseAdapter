@@ -7,13 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.afayp.baseadapter.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 一种布局
  */
-public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
+public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     protected Context mContext;
     protected List<T> mData;//数据源
@@ -26,6 +28,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
     private LinearLayout mEmptyView;//空view
     private int mLastPosition = -1;
     private boolean mIsLoading = false;//是否正在加载 mLoadingMoreEnable
+    private boolean mLoadingMoreEnable = false;
 
     public static final int HEADER_VIEW = 0x00000111;
     public static final int LOADING_VIEW = 0x00000222;
@@ -34,6 +37,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
 
     private LoadMoreListener mLoadMoreListener;
     private View mLoadingView;//正在加载的view
+    private View loadMoreFailedView;//加载失败view
 
     private void setLoadMorelistener(LoadMoreListener loadMorelistener){
         this.mLoadMoreListener  = loadMorelistener;
@@ -100,7 +104,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
     }
 
     public boolean isLoading(){
-        return mIsLoading;
+        return mLoadingMoreEnable;
     }
 
     public void setLoadingView(View loadingView) {
@@ -115,10 +119,6 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
         return mData.get(position);
     }
 
-    public int getmEmptyViewCount() {
-        return mEmptyView == null ? 0 : 1;
-    }
-
     public int getHeaderLayoutCount() {
         return mHeaderLayout == null ? 0 : 1;
     }
@@ -131,41 +131,53 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
         return mEmptyView == null ? 0 : 1;
     }
 
+    //判断是否是加载更多来的
     private boolean isLoadMore() {
 //        return mNextLoadEnable && pageSize != -1 && mRequestLoadMoreListener != null && mData.size() >= pageSize;
         return true;
     }
 
-
-
     @Override
     public int getItemCount() {
-        int i = isLoadMore() ? 1: 0;
-        int count = mData.size() +i + getHeaderLayoutCount() + getFooterLayoutCount();//加上header和footer的数量
+//        int i = isLoadMore() ? 1: 0;
+        int count = mData.size()  + getHeaderLayoutCount() + getFooterLayoutCount();//加上header和footer的数量
         // TODO: 2016/9/20
         return count;
     }
-
-
 
     @Override
     public int getItemViewType(int position) {
         if (mHeaderLayout != null && position == 0){
             return HEADER_VIEW;
         }
+        if (mData.size() == 0 && position == 0 && mEmptyView != null){
+            return EMPTY_VIEW;
+        }
+
+        if (mFooterLayout != null && position == mData.size() + getHeaderLayoutCount() + getFooterLayoutCount()){
+            return FOOTER_VIEW;
+        }
+
         return super.getItemViewType(position);
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         this.mContext = parent.getContext();
+        this.mLayoutInflater = LayoutInflater.from(mContext);
         BaseViewHolder holder = null;
         switch (viewType){
+            case LOADING_VIEW:
+                holder = getLoadingView(parent);
+                break;
             case HEADER_VIEW:
                 holder = BaseViewHolder.createViewHolder(mContext,mHeaderLayout);
                 break;
             case FOOTER_VIEW:
                 holder = BaseViewHolder.createViewHolder(mContext,mFooterLayout);
+                break;
+            case EMPTY_VIEW:
+                holder = BaseViewHolder.createViewHolder(mContext,mEmptyView);
                 break;
             default:
                 holder = BaseViewHolder.createViewHolder(mContext,parent,layoutResId);
@@ -174,8 +186,31 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
         return holder;
     }
 
+    private BaseViewHolder getLoadingView(ViewGroup parent) {
+        if (mLoadingView == null) {
+            return BaseViewHolder.createViewHolder(mContext,parent,R.layout.def_loading);
+        }
+        return BaseViewHolder.createViewHolder(mContext,mLoadingView);
+    }
+
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        int type = holder.getItemViewType();
+        if (type == EMPTY_VIEW || type == HEADER_VIEW || type == FOOTER_VIEW || type == LOADING_VIEW) {
+//            setFullSpan(holder);
+        } else {
+//            addAnimation(holder);
+        }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = holder.getItemViewType();
         int realPos = holder.getLayoutPosition();
         switch (type){
@@ -186,7 +221,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
             case EMPTY_VIEW:
                 break;
             default:
-                convert(holder, mData.get(realPos - getHeaderLayoutCount()),realPos);
+//                convert(holder, mData.get(realPos - getHeaderLayoutCount()),realPos);
                 break;
         }
     }
@@ -211,8 +246,6 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
      * @param index
      */
     private void addHeaderView(View header, int index) {
-
-
         if (mHeaderLayout == null) {
 //            if (mCopyHeaderLayout == null) {
                 mHeaderLayout = new LinearLayout(header.getContext());
@@ -249,8 +282,9 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
      * @param header
      */
     public void removeHeaderView(View header) {
-        if (mHeaderLayout == null) return;
-
+        if (mHeaderLayout == null){
+            return;
+        }
         mHeaderLayout.removeView(header);
         if (mHeaderLayout.getChildCount() == 0) {
             mHeaderLayout = null;
@@ -263,8 +297,9 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
      * @param footer
      */
     public void removeFooterView(View footer) {
-        if (mFooterLayout == null) return;
-
+        if (mFooterLayout == null){
+            return;
+        }
         mFooterLayout.removeView(footer);
         if (mFooterLayout.getChildCount() == 0) {
             mFooterLayout = null;
@@ -299,6 +334,40 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<BaseViewH
     public View getEmptyView() {
         return mEmptyView;
     }
+
+    public void setLoadMoreFailedView(View view) {
+        loadMoreFailedView = view;
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                removeFooterView(loadMoreFailedView);
+//                openLoadMore(pageSize);
+            }
+        });
+    }
+
+    public void showLoadMoreFailedView() {
+        loadComplete();
+        if (loadMoreFailedView == null) {
+//            loadMoreFailedView = mLayoutInflater.inflate(R.layout.def_load_more_failed, null);
+            loadMoreFailedView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeFooterView(loadMoreFailedView);
+//                    openLoadMore(pageSize);
+                }
+            });
+        }
+        addFooterView(loadMoreFailedView);
+    }
+
+    public void loadComplete() {
+//        mNextLoadEnable = false;
+        mLoadingMoreEnable = false;
+        this.notifyItemChanged(getItemCount());
+    }
+
+
 
 
 
