@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.afayp.baseadapter.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,7 +186,7 @@ public abstract class BaseQuickAdapter<T> extends RecyclerView.Adapter<RecyclerV
 
     private BaseViewHolder getLoadingView(ViewGroup parent) {
         if (mLoadingView == null) {
-            return BaseViewHolder.createViewHolder(mContext,parent,R.layout.def_loading);
+//            return BaseViewHolder.createViewHolder(mContext,parent,R.layout.def_loading);
         }
         return BaseViewHolder.createViewHolder(mContext,mLoadingView);
     }

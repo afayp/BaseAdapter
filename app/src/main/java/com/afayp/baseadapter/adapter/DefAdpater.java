@@ -27,7 +27,7 @@ public class DefAdpater extends RecyclerView.Adapter<DefAdpater.MyViewHolder>{
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_recyclerview, parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_type1, parent,false);
         return new MyViewHolder(view);
     }
 
@@ -48,7 +48,7 @@ public class DefAdpater extends RecyclerView.Adapter<DefAdpater.MyViewHolder>{
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.iv);
-            tv = (TextView) itemView.findViewById(R.id.tv);
+            tv = (TextView) itemView.findViewById(R.id.tv1);
         }
     }
 }

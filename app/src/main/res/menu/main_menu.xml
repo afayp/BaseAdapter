@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="SingleItem"
+    android:id="@+id/menu_single_item"/>
+
+    <item android:title="MultiItem"
+        android:id="@+id/menu_multi_item"/>
+
+    <item android:title="HeaderAndFooter"
+        android:id="@+id/menu_haf_item"/>
+
+    <item android:title="LoadMore"
+        android:id="@+id/menu_more_item"/>
+
+    <item android:title="EmptyView"
+        android:id="@+id/menu_empty_item"/>
+
+    <item android:title="Mix"
+        android:id="@+id/menu_mix_item"/>
+
+
+</menu>
