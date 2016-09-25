@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afayp.baseadapter.sample1.BaseViewHolder;
-import com.afayp.baseadapter.sample1.MultiItemCommonAdapter;
+import com.afayp.baseadapter.sample1.MultiItemBaseAdapter;
 
 /**
  * Created by Administrator on 2016/9/24.
@@ -15,11 +15,11 @@ public class EmptyWrapper extends RecyclerView.Adapter<BaseViewHolder> {
 
     public static final int ITEM_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
-    private MultiItemCommonAdapter mInnerAdapter;
+    private MultiItemBaseAdapter mInnerAdapter;
     private View mEmptyView;
     private int mEmptyLayoutId;
 
-    public EmptyWrapper(MultiItemCommonAdapter adapter) {
+    public EmptyWrapper(MultiItemBaseAdapter adapter) {
         mInnerAdapter = adapter;
     }
 

@@ -1,6 +1,7 @@
 package com.afayp.baseadapter.sample1;
 
 import android.support.v4.util.SparseArrayCompat;
+import android.util.Log;
 
 /**
  * 通过这个类来管理所有的type
@@ -56,6 +57,7 @@ public class ItemViewDelegateManager<T> {
     }
 
     public int getItemViewType(T item, int position) {
+        Log.e("TAG","getItemViewType normal "+position);
         int delegatesCount = delegates.size();
         for (int i = delegatesCount - 1; i >= 0; i--) {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);

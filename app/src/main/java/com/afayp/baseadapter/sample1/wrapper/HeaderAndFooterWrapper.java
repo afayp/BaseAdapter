@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afayp.baseadapter.sample1.BaseViewHolder;
-import com.afayp.baseadapter.sample1.MultiItemCommonAdapter;
+import com.afayp.baseadapter.sample1.MultiItemBaseAdapter;
 
 
 /**
@@ -21,9 +21,9 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter<BaseViewHolder>
     private SparseArrayCompat<View> mHeaderViews = new SparseArrayCompat<>();
     private SparseArrayCompat<View> mFootViews = new SparseArrayCompat<>();
 
-    private MultiItemCommonAdapter mInnerAdapter;
+    private MultiItemBaseAdapter mInnerAdapter;
 
-    public HeaderAndFooterWrapper(MultiItemCommonAdapter adapter) {
+    public HeaderAndFooterWrapper(MultiItemBaseAdapter adapter) {
         this.mInnerAdapter = adapter;
     }
 
@@ -78,7 +78,6 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter<BaseViewHolder>
 
     public void addHeaderView(View view) {
         mHeaderViews.put(mHeaderViews.size() + BASE_ITEM_TYPE_HEADER, view);
-        mInnerAdapter.setHeaderCount(getHeadersCount());
     }
 
     public void addFootView(View view) {

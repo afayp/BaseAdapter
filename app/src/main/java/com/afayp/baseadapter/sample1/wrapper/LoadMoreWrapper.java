@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afayp.baseadapter.sample1.BaseViewHolder;
-import com.afayp.baseadapter.sample1.MultiItemCommonAdapter;
+import com.afayp.baseadapter.sample1.MultiItemBaseAdapter;
 
 /**
  * Created by Administrator on 2016/9/24.
@@ -16,13 +16,13 @@ public class LoadMoreWrapper extends RecyclerView.Adapter<BaseViewHolder> {
 
     public static final int ITEM_TYPE_LOAD_MORE = Integer.MAX_VALUE - 2;
 
-    private MultiItemCommonAdapter mInnerAdapter;
+    private MultiItemBaseAdapter mInnerAdapter;
     private View mLoadMoreView;
     private int mLoadMoreLayoutId;
     private OnLoadMoreListener mOnLoadMoreListener;
 
 
-    public LoadMoreWrapper(MultiItemCommonAdapter adapter) {
+    public LoadMoreWrapper(MultiItemBaseAdapter adapter) {
         mInnerAdapter = adapter;
     }
 

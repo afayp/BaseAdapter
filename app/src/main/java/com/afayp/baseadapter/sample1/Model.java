@@ -3,22 +3,22 @@ package com.afayp.baseadapter.sample1;
 /**
  * Created by Administrator on 2016/9/24.
  */
-public class Person {
+public class Model {
 
     private String name;
     private int type;// type 1,2
 
-    public Person() {
+    public Model() {
     }
 
-    public Person(String name, int type) {
+    public Model(String name, int type) {
         this.name = name;
         this.type = type;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Model{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
                 '}';

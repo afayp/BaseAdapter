@@ -9,19 +9,19 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/9/24.
  */
-public class MultiItemSampleAdapter extends MultiItemCommonAdapter<Person> {
+public class MultiItemSampleAdapter extends MultiItemBaseAdapter<Model> {
 
 
-    public MultiItemSampleAdapter(Context context, List<Person> datas) {
+    public MultiItemSampleAdapter(Context context, List<Model> datas) {
         super(context, datas);
         addItemViewDelegate(new Type1Delegate());
         addItemViewDelegate(new Type2Delegate());
     }
 
-    class Type1Delegate implements ItemViewDelegate<Person>{
+    class Type1Delegate implements ItemViewDelegate<Model>{
 
         @Override
-        public boolean isForViewType(Person item, int position) {
+        public boolean isForViewType(Model item, int position) {
             return item.getType() == 1 ;
         }
 
@@ -31,16 +31,16 @@ public class MultiItemSampleAdapter extends MultiItemCommonAdapter<Person> {
         }
 
         @Override
-        public void convert(BaseViewHolder holder, Person item, int position) {
+        public void convert(BaseViewHolder holder, Model item, int position) {
             holder.setText(R.id.tv1,item.getName());
 
         }
     }
 
-    class Type2Delegate implements ItemViewDelegate<Person>{
+    class Type2Delegate implements ItemViewDelegate<Model>{
 
         @Override
-        public boolean isForViewType(Person item, int position) {
+        public boolean isForViewType(Model item, int position) {
             return item.getType() == 2;
         }
 
@@ -50,7 +50,7 @@ public class MultiItemSampleAdapter extends MultiItemCommonAdapter<Person> {
         }
 
         @Override
-        public void convert(BaseViewHolder holder, Person item, int position) {
+        public void convert(BaseViewHolder holder, Model item, int position) {
             holder.setText(R.id.tv2,item.getName() );
 
         }
