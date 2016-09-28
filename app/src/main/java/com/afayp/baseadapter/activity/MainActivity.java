@@ -1,4 +1,4 @@
-package com.afayp.baseadapter;
+package com.afayp.baseadapter.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.afayp.baseadapter.R;
 import com.afayp.baseadapter.sample1.BaseViewHolder;
 import com.afayp.baseadapter.sample1.SingleItemBaseAdapter;
 import com.afayp.baseadapter.sample1.Model;
@@ -27,11 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-
     private SingleItemBaseAdapter<Model> singleItemAdapter;
     private MultiItemSampleAdapter multiItemAdapter;
-
-
     private MultiItemBaseAdapter currentAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Model> singleData;
@@ -191,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         emptyAdapter.addHeaderView(header);
         emptyAdapter.addFootView(footer);
         emptyAdapter.setEmptyView(R.layout.item_empty);
-
     }
 
     private void singleItem() {
@@ -232,9 +229,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
     public void toast(String text){
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
