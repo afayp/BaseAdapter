@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         initData();
         initAdapter();
         singleItem();
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void initAdapter() {
         View header = LayoutInflater.from(this).inflate(R.layout.item_header,null);
         View footer = LayoutInflater.from(this).inflate(R.layout.item_footer, null);
+
 
         singleItemAdapter = new SingleItemBaseAdapter<Model>(this, singleData, R.layout.item_type1) {
             @Override
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         multiItemAdapter = new MultiItemSampleAdapter(this, multiData);
         multiItemAdapter.addHeaderView(header);
@@ -211,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
+
     }
 
     @Override
@@ -225,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_empty_item:
                 emptyView();
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
