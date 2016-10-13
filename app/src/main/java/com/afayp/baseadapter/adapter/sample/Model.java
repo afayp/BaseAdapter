@@ -1,4 +1,4 @@
-package com.afayp.baseadapter.sample1;
+package com.afayp.baseadapter.adapter.sample;
 
 /**
  * Created by Administrator on 2016/9/24.

@@ -35,6 +35,12 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return holder;
     }
 
+    public static BaseViewHolder createViewHolder(Context context,ViewGroup parent, View itemView) {
+        parent.addView(itemView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        BaseViewHolder holder = new BaseViewHolder(context, itemView);
+        return holder;
+    }
+
     public static BaseViewHolder createViewHolder(Context context, ViewGroup parent, int layoutId) {
         View itemView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         BaseViewHolder holder = new BaseViewHolder(context, itemView);
@@ -60,7 +66,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     /**
      *返回整个item view
      */
-    public View getView(){
+    public View getConvertView(){
         return convertView;
     }
 

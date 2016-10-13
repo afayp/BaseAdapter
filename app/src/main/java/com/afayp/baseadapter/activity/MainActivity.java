@@ -16,11 +16,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.afayp.baseadapter.R;
-import com.afayp.baseadapter.sample1.BaseViewHolder;
-import com.afayp.baseadapter.sample1.SingleItemBaseAdapter;
-import com.afayp.baseadapter.sample1.Model;
-import com.afayp.baseadapter.sample1.MultiItemBaseAdapter;
-import com.afayp.baseadapter.sample1.MultiItemSampleAdapter;
+import com.afayp.baseadapter.adapter.BaseViewHolder;
+import com.afayp.baseadapter.adapter.sample.Model;
+import com.afayp.baseadapter.adapter.MultiItemBaseAdapter;
+import com.afayp.baseadapter.adapter.sample.MultiItemSampleAdapter;
+import com.afayp.baseadapter.adapter.SingleItemBaseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
         emptyAdapter.addHeaderView(header);
         emptyAdapter.addFootView(footer);
         emptyAdapter.setEmptyView(R.layout.item_empty);
+
+
+
     }
 
     private void singleItem() {

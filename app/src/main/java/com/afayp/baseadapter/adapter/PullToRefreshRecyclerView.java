@@ -1,4 +1,4 @@
-package com.afayp.baseadapter.sample1;
+package com.afayp.baseadapter.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.afayp.baseadapter.sample1;
+package com.afayp.baseadapter.adapter;
 
 import android.support.v4.util.SparseArrayCompat;
 import android.util.Log;

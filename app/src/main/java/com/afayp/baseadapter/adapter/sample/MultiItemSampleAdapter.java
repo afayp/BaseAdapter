@@ -1,8 +1,11 @@
-package com.afayp.baseadapter.sample1;
+package com.afayp.baseadapter.adapter.sample;
 
 import android.content.Context;
 
 import com.afayp.baseadapter.R;
+import com.afayp.baseadapter.adapter.BaseViewHolder;
+import com.afayp.baseadapter.adapter.ItemViewDelegate;
+import com.afayp.baseadapter.adapter.MultiItemBaseAdapter;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ public class MultiItemSampleAdapter extends MultiItemBaseAdapter<Model> {
         addItemViewDelegate(new Type2Delegate());
     }
 
-    class Type1Delegate implements ItemViewDelegate<Model>{
+    class Type1Delegate implements ItemViewDelegate<Model> {
 
         @Override
         public boolean isForViewType(Model item, int position) {
